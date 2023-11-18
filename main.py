@@ -23,8 +23,8 @@ def add_log_(log: LogInput):
 
 
 @app.post("/query", response_model=list[LogInput])
-def query_logs_(query: QueryInput):
-    logs: list[Log] = query_logs(query)
+def query_logs_(query: QueryInput, limit: int = 100, offset: int = 0):
+    logs: list[Log] = query_logs(query, limit, offset)
     return [
         LogInput(
             level=log.level,

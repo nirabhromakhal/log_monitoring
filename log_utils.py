@@ -19,7 +19,7 @@ def add_log(log: dict):
         session.commit()
 
 
-def query_logs(query: QueryInput) -> list[Log]:
+def query_logs(query: QueryInput, limit: int, offset: int) -> list[Log]:
     with Session(engine) as session:
         sql = session.query(Log)
         if query.timestamp_start and query.timestamp_end:
@@ -42,6 +42,6 @@ def query_logs(query: QueryInput) -> list[Log]:
         if query.metadata_parentResourceId:
             sql = sql.filter(Log.metadata_['parentResourceId'].astext == query.metadata_parentResourceId)
 
-        logs = sql.all()
+        logs = sql.offset(offset).limit(limit).all()
 
     return list(logs)
