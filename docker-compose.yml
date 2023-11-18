@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  # PostgreSQL database service
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: logs
+      POSTGRES_USER: dyte
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+
+  # Redis service
+  redis:
+    image: redis:latest
+
+  # Celery service
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A log_utils worker --loglevel=info
+    depends_on:
+      - redis
+      - postgres
+
+  # Backend service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+      - postgres
+      - celery
+
+  # Frontend service
+  frontend:
+    build:
+      context: .
+      dockerfile: ui/Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - backend

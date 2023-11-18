@@ -1,0 +1,8 @@
+alembic
+fastapi
+uvicorn
+sqlalchemy_json
+psycopg2
+celery
+async-timeout
+redis
