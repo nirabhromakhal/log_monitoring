@@ -1,0 +1,4 @@
+.idea
+venv
+ui/.idea
+ui/node_modules
